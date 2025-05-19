@@ -399,7 +399,7 @@ export default function ClientSearchPage() {
                 reviews: 53,
                 distance: "5.2 km",
                 price: "$$",
-                availability: "Disponível",
+                availability: "Dispon��vel",
                 experience: "9 anos",
                 verified: true,
                 avatar: "/placeholder.svg?height=80&width=80",

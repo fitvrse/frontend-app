@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import type React from "react"
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { DashboardHeader } from "@/components/dashboard-header"
+import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { cn } from "@/lib/utils"
+import type React from "react"
 
-export default function GymLayout({
+export default function PersonalLayout({
   children,
 }: {
   children: React.ReactNode
@@ -39,13 +39,13 @@ export default function GymLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <DashboardHeader
-        userType="gym"
-        userName="Academia Fitness"
+        userType="personal"
+        userName="João Silva"
         onSidebarToggle={toggleSidebar}
         isSidebarOpen={isSidebarOpen}
       />
       <div className="flex flex-1 pt-16">
-        <DashboardSidebar userType="gym" isSidebarOpen={isSidebarOpen} />
+        <DashboardSidebar userType="personal" isSidebarOpen={isSidebarOpen} />
         <main className={cn("flex-1 p-4 md:p-6 transition-all duration-300", isSidebarOpen ? "ml-64" : "ml-0")}>
           {children}
         </main>

@@ -6,7 +6,7 @@ import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { cn } from "@/lib/utils"
 
-export default function GymLayout({
+export default function NutritionistLayout({
   children,
 }: {
   children: React.ReactNode
@@ -39,13 +39,13 @@ export default function GymLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <DashboardHeader
-        userType="gym"
-        userName="Academia Fitness"
+        userType="nutritionist"
+        userName="Ana Nutricionista"
         onSidebarToggle={toggleSidebar}
         isSidebarOpen={isSidebarOpen}
       />
       <div className="flex flex-1 pt-16">
-        <DashboardSidebar userType="gym" isSidebarOpen={isSidebarOpen} />
+        <DashboardSidebar userType="nutritionist" isSidebarOpen={isSidebarOpen} />
         <main className={cn("flex-1 p-4 md:p-6 transition-all duration-300", isSidebarOpen ? "ml-64" : "ml-0")}>
           {children}
         </main>

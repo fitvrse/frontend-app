@@ -1,24 +1,55 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 
 const data = [
-  { name: 'Jan', total: 2400 },
-  { name: 'Feb', total: 1398 },
-  { name: 'Mar', total: 9800 },
-  { name: 'Apr', total: 3908 },
-  { name: 'May', total: 4800 },
-  { name: 'Jun', total: 3800 },
-  { name: 'Jul', total: 4300 },
-  { name: 'Aug', total: 2100 },
-  { name: 'Sep', total: 3400 },
-  { name: 'Oct', total: 4600 },
-  { name: 'Nov', total: 5300 },
-  { name: 'Dec', total: 4100 },
+  {
+    name: "Jan",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Feb",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Mar",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Apr",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "May",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Jun",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Jul",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Aug",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Sep",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Oct",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Nov",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
+  {
+    name: "Dec",
+    total: Math.floor(Math.random() * 5000) + 1000,
+  },
 ]
 
 export function Overview() {
@@ -26,30 +57,22 @@ export function Overview() {
     <Card>
       <CardHeader>
         <CardTitle>Visão Geral</CardTitle>
-        <CardDescription>
-          Visão geral das atividades do mês atual.
-        </CardDescription>
+        <CardDescription>Visão geral das atividades do mês atual.</CardDescription>
       </CardHeader>
       <CardContent className="px-2">
-        <div style={{ width: '100%', height: 350 }}>
-          <div className="flex h-full items-end justify-between space-x-2">
-            {data.map((item) => (
-              <div
-                key={item.name}
-                className="flex flex-col items-center flex-1"
-              >
-                <div
-                  className="w-full bg-blue-500 rounded-t"
-                  style={{
-                    height: `${(item.total / 10000) * 100}%`,
-                    minHeight: '20px',
-                  }}
-                />
-                <span className="text-xs text-gray-600 mt-1">{item.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <ResponsiveContainer width="100%" height={350}>
+          <BarChart data={data}>
+            <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+            <YAxis
+              stroke="#888888"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => `$${value}`}
+            />
+            <Bar dataKey="total" fill="currentColor" radius={[4, 4, 0, 0]} className="fill-primary" />
+          </BarChart>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   )

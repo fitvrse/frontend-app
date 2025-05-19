@@ -91,7 +91,7 @@ const FinancesPage = () => {
 
       <div className="mt-8">
         <h2 className="text-2xl font-semibold mb-4">Vendas Recentes</h2>
-        <RecentSales />
+        <RecentSales data={data} />
       </div>
     </div>
   )

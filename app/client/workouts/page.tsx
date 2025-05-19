@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import { ArrowRight, Calendar, CheckCircle2, Clock, Dumbbell, Play, TrendingUp } from "lucide-react"
+import { ArrowRight, Calendar, Clock, Dumbbell, TrendingUp } from "lucide-react"
+// Vamos adicionar o Link do Next.js nas importações
+import Link from "next/link"
 
 export default function ClientWorkoutsPage() {
   return (
@@ -42,110 +44,25 @@ export default function ClientWorkoutsPage() {
               <p className="text-sm font-medium">Personal Trainer: João Carlos</p>
             </div>
             <div className="w-full md:w-auto">
-              <Button size="lg" className="w-full md:w-auto">
-                <Play className="mr-2 h-4 w-4" />
-                Iniciar Treino
-              </Button>
+              {/* // Agora vamos modificar o botão "Ver Treino" para incluir o link para a página de current-training
+              // Substitua o botão existente na linha que contém "Ver Treino" com o seguinte: */}
+              <Link href="/client/current-training" className="w-full md:w-auto">
+                <Button size="lg" className="w-full md:w-auto">
+                  Ver Treino
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </Link>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Tabs defaultValue="current" className="space-y-4">
+      <Tabs defaultValue="week" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="current">Treino Atual</TabsTrigger>
           <TabsTrigger value="week">Treinos da Semana</TabsTrigger>
           <TabsTrigger value="history">Histórico</TabsTrigger>
           <TabsTrigger value="progress">Progresso</TabsTrigger>
         </TabsList>
-        <TabsContent value="current" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                name: "Supino Reto",
-                sets: "4 séries",
-                reps: "10-12 repetições",
-                rest: "60 segundos",
-                weight: "Última: 20kg",
-                completed: true,
-              },
-              {
-                name: "Supino Inclinado",
-                sets: "3 séries",
-                reps: "10-12 repetições",
-                rest: "60 segundos",
-                weight: "Última: 18kg",
-                completed: true,
-              },
-              {
-                name: "Crucifixo",
-                sets: "3 séries",
-                reps: "12-15 repetições",
-                rest: "45 segundos",
-                weight: "Última: 12kg",
-                completed: false,
-              },
-              {
-                name: "Tríceps Corda",
-                sets: "4 séries",
-                reps: "12-15 repetições",
-                rest: "45 segundos",
-                weight: "Última: 25kg",
-                completed: false,
-              },
-              {
-                name: "Tríceps Francês",
-                sets: "3 séries",
-                reps: "10-12 repetições",
-                rest: "60 segundos",
-                weight: "Última: 15kg",
-                completed: false,
-              },
-              {
-                name: "Mergulho no Banco",
-                sets: "3 séries",
-                reps: "Até a falha",
-                rest: "60 segundos",
-                weight: "Peso corporal",
-                completed: false,
-              },
-            ].map((exercise, i) => (
-              <Card key={i} className={exercise.completed ? "bg-muted/50" : ""}>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-base">{exercise.name}</CardTitle>
-                    {exercise.completed && <CheckCircle2 className="h-5 w-5 text-green-500" />}
-                  </div>
-                </CardHeader>
-                <CardContent className="pb-2">
-                  <div className="space-y-1 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Séries:</span>
-                      <span>{exercise.sets}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Repetições:</span>
-                      <span>{exercise.reps}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Descanso:</span>
-                      <span>{exercise.rest}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Carga:</span>
-                      <span>{exercise.weight}</span>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button variant={exercise.completed ? "outline" : "default"} size="sm" className="w-full">
-                    {exercise.completed ? "Concluído" : "Marcar como concluído"}
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
         <TabsContent value="history" className="space-y-4">
           <Card>
             <CardHeader>
