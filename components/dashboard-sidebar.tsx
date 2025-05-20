@@ -167,7 +167,7 @@ export function DashboardSidebar({ userType, isSidebarOpen }: SidebarProps) {
       { href: "/client/invoices", label: "Minhas Faturas", icon: Layers },
       { href: "/client/settings", label: "Configurações", icon: Settings },
     ],
-  },
+  }
 
   const currentRoutes = routes[userType]
 
