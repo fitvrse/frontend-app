@@ -164,7 +164,7 @@ export function DashboardSidebar({ userType, isSidebarOpen }: SidebarProps) {
       { href: "/client/schedule", label: "Agenda", icon: Calendar },
       { href: "/client/assessment", label: "Avaliações", icon: Activity },
       { href: "/client/my-files", label: "Meus Arquivos", icon: Layers },
-      { href: "/client/invoices", label: "Minhas Faturas", icon: Layers }
+      { href: "/client/invoices", label: "Minhas Faturas", icon: Layers },
       { href: "/client/settings", label: "Configurações", icon: Settings },
     ],
   }
