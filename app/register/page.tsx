@@ -32,7 +32,7 @@ export default function RegisterPage() {
   const [document, setDocument] = useState("")
   const [phone, setPhone] = useState("")
   const [gymName, setGymName] = useState("")
-  const [professionalId, setProfessionalId] = useState("") // CRN or CREF
+  const [professionalId, setProfessionalId] = useState("") // - CRN or CREF - 
   const [hasError, setHasError] = useState(false)
 
   // Step 2 fields
