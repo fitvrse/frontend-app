@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import {  useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dumbbell, Users, Apple, User, ArrowLeft, ArrowRight } from "lucide-react"
+import { MaskedInput } from "@/components/ui/masked-input"
+import { api } from "@/service/api"
+import { onlyLetters, sanitize } from "@/utils/sanitize.utils"
+import FormError from "./formError"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -29,6 +33,7 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("")
   const [gymName, setGymName] = useState("")
   const [professionalId, setProfessionalId] = useState("") // CRN or CREF
+  const [hasError, setHasError] = useState(false)
 
   // Step 2 fields
   const [username, setUsername] = useState("")
@@ -76,21 +81,6 @@ export default function RegisterPage() {
       return
     }
 
-    // Simulação de registro - em produção, isso seria uma chamada de API
-    console.log("Registro com:", {
-      userType,
-      firstName,
-      lastName,
-      email,
-      document,
-      documentType: userType === "gym" ? "cnpj" : documentType,
-      phone,
-      gymName,
-      professionalId,
-      username,
-      password,
-    })
-
     // Redirecionar para o dashboard apropriado
     switch (userType) {
       case "gym":
@@ -120,6 +110,31 @@ export default function RegisterPage() {
     return value.replace(/\D/g, "")
   }
 
+  async function registerUser(e: React.FormEvent) {
+  e.preventDefault();
+
+  const user = {
+    email: email.trim(),
+    url: sanitize(username),
+    senha: password,
+    telefone: sanitize(phone),
+    nome: sanitize(firstName),
+    sobrenome: sanitize(lastName),
+    cpf: sanitize(document),
+  };
+
+  try {
+    const response = await api.post("/usuarios/cadastrar/cliente", user);
+
+    if (response.status === 201) {
+      router.push("/login");
+    }
+  } catch (error: any) {
+   console.error(error.message);
+   setHasError(true);
+  }
+}
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <Card className="w-full max-w-md">
@@ -148,9 +163,8 @@ export default function RegisterPage() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Client Registration Form */}
             <TabsContent value="client">
-              <form onSubmit={currentStep === 2 ? handleRegister : (e) => e.preventDefault()}>
+              <form onSubmit={registerUser}>
                 <div className="grid gap-4">
                   {currentStep === 1 ? (
                     <>
@@ -160,16 +174,25 @@ export default function RegisterPage() {
                           <Input
                             id="firstName-client"
                             value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
+                            onChange={(e) => {
+                              setFirstName(onlyLetters(e.target.value));
+                            }}
+                            maxLength={30}
+                            placeholder="Nome"
                             required
                           />
                         </div>
+
                         <div className="grid gap-2">
                           <Label htmlFor="lastName-client">Sobrenome</Label>
                           <Input
                             id="lastName-client"
                             value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
+                            onChange={(e) => {
+                              setLastName(onlyLetters(e.target.value));
+                            }}
+                            maxLength={30}
+                            placeholder="Sobrenome"
                             required
                           />
                         </div>
@@ -185,27 +208,33 @@ export default function RegisterPage() {
                           required
                         />
                       </div>
+
+
                       <div className="grid gap-2">
-                        <Label htmlFor="cpf-client">CPF (apenas números)</Label>
-                        <Input
+                        <Label htmlFor="cpf-client">CPF</Label>
+                        <MaskedInput
                           id="cpf-client"
+                          mask="000.000.000-00"
                           value={document}
-                          onChange={(e) => setDocument(formatDocument(e.target.value))}
-                          maxLength={11}
+                          onAccept={(value) => setDocument(value)}
+                          placeholder="000.000.000-00"
                           required
                         />
                       </div>
+
+
                       <div className="grid gap-2">
-                        <Label htmlFor="phone-client">Telefone (apenas números)</Label>
-                        <Input
+                        <Label htmlFor="phone-client">Telefone</Label>
+                        <MaskedInput
                           id="phone-client"
+                          mask="(00) 00000-0000"
                           value={phone}
-                          onChange={(e) => setPhone(formatPhone(e.target.value))}
-                          maxLength={11}
+                          onAccept={(value) => setPhone(value)}
+                          placeholder="(11) 91234-5678"
                           required
                         />
                       </div>
-                      <Button type="button" onClick={handleNextStep} className="w-full">
+                      <Button type="button" onClick={() => setCurrentStep(2)} className="w-full">
                         Próximo <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </>
@@ -217,7 +246,10 @@ export default function RegisterPage() {
                           id="username-client"
                           placeholder="Ex: joaocarlossilva"
                           value={username}
-                          onChange={(e) => setUsername(e.target.value)}
+                          onChange={(e) =>
+                            setUsername(e.target.value)
+                          }
+                          maxLength={30}
                           required
                         />
                       </div>
@@ -238,7 +270,6 @@ export default function RegisterPage() {
                           type="password"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          required
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
@@ -246,6 +277,9 @@ export default function RegisterPage() {
                           <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
                         </Button>
                         <Button type="submit">Cadastrar</Button>
+                        {
+                          hasError && <FormError message="Erro ao cadastrar. Verifique seus dados." />
+                        }
                       </div>
                     </>
                   )}
@@ -265,7 +299,10 @@ export default function RegisterPage() {
                           <Input
                             id="firstName-personal"
                             value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
+                            onChange={(e) =>{
+                              setFirstName(onlyLetters(e.target.value));
+                            }}
+                            maxLength={30}
                             required
                           />
                         </div>
@@ -274,7 +311,8 @@ export default function RegisterPage() {
                           <Input
                             id="lastName-personal"
                             value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
+                            onChange={(e) => setLastName(onlyLetters(e.target.value))}
+                            maxLength={30}
                             required
                           />
                         </div>
@@ -288,6 +326,7 @@ export default function RegisterPage() {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required
+                          maxLength={100}
                         />
                       </div>
                       <div className="grid gap-2">
