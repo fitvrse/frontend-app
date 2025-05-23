@@ -267,9 +267,8 @@ export default function RegisterPage() {
                           required
                         >
                           <option value="">Selecione...</option>
-                          <option value="masculino">Masculino</option>
-                          <option value="feminino">Feminino</option>
-                          <option value="outro">Outro</option>
+                          <option value="MASCULINO">Masculino</option>
+                          <option value="FEMININO">Feminino</option>
                         </select>
                       </div>
                       <div className="grid gap-2">
