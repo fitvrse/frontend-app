@@ -258,7 +258,7 @@ export default function RegisterPage() {
                         {fieldErrors.username && <FormError message={fieldErrors.username} />}
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="gender">Sexo</Label>
+                        <Label htmlFor="gender">Gênero</Label>
                         <select
                           id="gender"
                           value={gender}
