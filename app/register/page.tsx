@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import {  useState } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -12,9 +12,9 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dumbbell, Users, Apple, User, ArrowLeft, ArrowRight } from "lucide-react"
 import { MaskedInput } from "@/components/ui/masked-input"
-import { api } from "@/service/api"
-import { onlyLetters, sanitize } from "@/utils/sanitize.utils"
+import { onlyLetters } from "@/utils/sanitize.utils"
 import FormError from "./formError"
+import { registerUserClient } from "@/service/userService"
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -34,6 +34,9 @@ export default function RegisterPage() {
   const [gymName, setGymName] = useState("")
   const [professionalId, setProfessionalId] = useState("") // CRN or CREF
   const [hasError, setHasError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const [gender, setGender] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Step 2 fields
   const [username, setUsername] = useState("")
@@ -110,30 +113,23 @@ export default function RegisterPage() {
     return value.replace(/\D/g, "")
   }
 
-  async function registerUser(e: React.FormEvent) {
-  e.preventDefault();
+  function registerClient(event: React.FormEvent) {
+    event.preventDefault();
 
-  const user = {
-    email: email.trim(),
-    url: sanitize(username),
-    senha: password,
-    telefone: sanitize(phone),
-    nome: sanitize(firstName),
-    sobrenome: sanitize(lastName),
-    cpf: sanitize(document),
-  };
-
-  try {
-    const response = await api.post("/usuarios/cadastrar/cliente", user);
-
-    if (response.status === 201) {
-      router.push("/login");
-    }
-  } catch (error: any) {
-   console.error(error.message);
-   setHasError(true);
+    return registerUserClient({
+    email,
+    username,
+    password,
+    phone,
+    firstName,
+    lastName,
+    document,
+    setFieldErrors,
+    setErrorMessage,
+    setHasError,
+    router
+  });
   }
-}
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
@@ -164,7 +160,7 @@ export default function RegisterPage() {
             </TabsList>
 
             <TabsContent value="client">
-              <form onSubmit={registerUser}>
+              <form onSubmit={registerClient}>
                 <div className="grid gap-4">
                   {currentStep === 1 ? (
                     <>
@@ -183,7 +179,7 @@ export default function RegisterPage() {
                           />
                         </div>
 
-                        <div className="grid gap-2">
+                        <div className="grid gap-2 ">
                           <Label htmlFor="lastName-client">Sobrenome</Label>
                           <Input
                             id="lastName-client"
@@ -205,8 +201,10 @@ export default function RegisterPage() {
                           placeholder="nome@exemplo.com"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
+                          className={fieldErrors.email ? "border-red-500" : ""}
                           required
                         />
+                        {fieldErrors.email && <FormError message={fieldErrors.email} />}
                       </div>
 
 
@@ -217,9 +215,11 @@ export default function RegisterPage() {
                           mask="000.000.000-00"
                           value={document}
                           onAccept={(value) => setDocument(value)}
+                          className={fieldErrors.cpf ? "border-red-500" : ""}
                           placeholder="000.000.000-00"
                           required
                         />
+                        {fieldErrors.cpf && <FormError message={fieldErrors.cpf} />}
                       </div>
 
 
@@ -230,9 +230,11 @@ export default function RegisterPage() {
                           mask="(00) 00000-0000"
                           value={phone}
                           onAccept={(value) => setPhone(value)}
+                          className={fieldErrors.phone ? "border-red-500" : ""}
                           placeholder="(11) 91234-5678"
                           required
                         />
+                        {fieldErrors.phone && <FormError message={fieldErrors.phone} />}
                       </div>
                       <Button type="button" onClick={() => setCurrentStep(2)} className="w-full">
                         Próximo <ArrowRight className="ml-2 h-4 w-4" />
@@ -249,9 +251,26 @@ export default function RegisterPage() {
                           onChange={(e) =>
                             setUsername(e.target.value)
                           }
+                          className={fieldErrors.username ? "border-red-500" : ""}
                           maxLength={30}
                           required
                         />
+                        {fieldErrors.username && <FormError message={fieldErrors.username} />}
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="gender">Sexo</Label>
+                        <select
+                          id="gender"
+                          value={gender}
+                          onChange={(e) => setGender(e.target.value)}
+                          className="border rounded-md px-3 py-2"
+                          required
+                        >
+                          <option value="">Selecione...</option>
+                          <option value="masculino">Masculino</option>
+                          <option value="feminino">Feminino</option>
+                          <option value="outro">Outro</option>
+                        </select>
                       </div>
                       <div className="grid gap-2">
                         <Label htmlFor="password-client">Senha</Label>
@@ -277,9 +296,7 @@ export default function RegisterPage() {
                           <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
                         </Button>
                         <Button type="submit">Cadastrar</Button>
-                        {
-                          hasError && <FormError message="Erro ao cadastrar. Verifique seus dados." />
-                        }
+                        {errorMessage && <FormError message="Verifique seus dados." />}
                       </div>
                     </>
                   )}
@@ -299,7 +316,7 @@ export default function RegisterPage() {
                           <Input
                             id="firstName-personal"
                             value={firstName}
-                            onChange={(e) =>{
+                            onChange={(e) => {
                               setFirstName(onlyLetters(e.target.value));
                             }}
                             maxLength={30}
