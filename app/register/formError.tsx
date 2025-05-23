@@ -6,7 +6,7 @@ type FormErrorProps = {
 export default function FormError({ message }: FormErrorProps) {
 
   return (
-    <div className="mt-2 text-sm text-red-600 w-full">
+    <div className="text-[10px] text-red-600 w-full">
       {message}
     </div>
   );
