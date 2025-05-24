@@ -116,19 +116,23 @@ export default function RegisterPage() {
   function registerClient(event: React.FormEvent) {
     event.preventDefault();
 
+    if (password !== confirmPassword) {
+    setFieldErrors((prev) => ({
+      ...prev,
+      confirmPassword: "As senhas não coincidem",
+    }));
+    return;
+  }
+
     return registerUserClient({
-    email,
-    username,
-    password,
-    phone,
-    firstName,
-    lastName,
-    document,
-    setFieldErrors,
-    setErrorMessage,
-    setHasError,
-    router
-  });
+      email,
+      password,
+      firstName,
+      setFieldErrors,
+      setErrorMessage,
+      setHasError,
+      router
+    });
   }
 
   return (
@@ -162,143 +166,71 @@ export default function RegisterPage() {
             <TabsContent value="client">
               <form onSubmit={registerClient}>
                 <div className="grid gap-4">
-                  {currentStep === 1 ? (
-                    <>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="firstName-client">Nome</Label>
-                          <Input
-                            id="firstName-client"
-                            value={firstName}
-                            onChange={(e) => {
-                              setFirstName(onlyLetters(e.target.value));
-                            }}
-                            maxLength={30}
-                            placeholder="Nome"
-                            required
-                          />
-                        </div>
-
-                        <div className="grid gap-2 ">
-                          <Label htmlFor="lastName-client">Sobrenome</Label>
-                          <Input
-                            id="lastName-client"
-                            value={lastName}
-                            onChange={(e) => {
-                              setLastName(onlyLetters(e.target.value));
-                            }}
-                            maxLength={30}
-                            placeholder="Sobrenome"
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="email-client">Email</Label>
-                        <Input
-                          id="email-client"
-                          type="email"
-                          placeholder="nome@exemplo.com"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className={fieldErrors.email ? "border-red-500" : ""}
-                          required
-                        />
-                        {fieldErrors.email && <FormError message={fieldErrors.email} />}
-                      </div>
-
-
-                      <div className="grid gap-2">
-                        <Label htmlFor="cpf-client">CPF</Label>
-                        <MaskedInput
-                          id="cpf-client"
-                          mask="000.000.000-00"
-                          value={document}
-                          onAccept={(value) => setDocument(value)}
-                          className={fieldErrors.cpf ? "border-red-500" : ""}
-                          placeholder="000.000.000-00"
-                          required
-                        />
-                        {fieldErrors.cpf && <FormError message={fieldErrors.cpf} />}
-                      </div>
-
-
-                      <div className="grid gap-2">
-                        <Label htmlFor="phone-client">Telefone</Label>
-                        <MaskedInput
-                          id="phone-client"
-                          mask="(00) 00000-0000"
-                          value={phone}
-                          onAccept={(value) => setPhone(value)}
-                          className={fieldErrors.phone ? "border-red-500" : ""}
-                          placeholder="(11) 91234-5678"
-                          required
-                        />
-                        {fieldErrors.phone && <FormError message={fieldErrors.phone} />}
-                      </div>
-                      <Button type="button" onClick={() => setCurrentStep(2)} className="w-full">
-                        Próximo <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <div className="grid gap-2">
-                        <Label htmlFor="username-client">Nome de usuário</Label>
-                        <Input
-                          id="username-client"
-                          placeholder="Ex: joaocarlossilva"
-                          value={username}
-                          onChange={(e) =>
-                            setUsername(e.target.value)
-                          }
-                          className={fieldErrors.username ? "border-red-500" : ""}
-                          maxLength={30}
-                          required
-                        />
-                        {fieldErrors.username && <FormError message={fieldErrors.username} />}
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="gender">Gênero</Label>
-                        <select
-                          id="gender"
-                          value={gender}
-                          onChange={(e) => setGender(e.target.value)}
-                          className="border rounded-md px-3 py-2"
-                          required
-                        >
-                          <option value="">Selecione...</option>
-                          <option value="MASCULINO">Masculino</option>
-                          <option value="FEMININO">Feminino</option>
-                        </select>
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="password-client">Senha</Label>
-                        <Input
-                          id="password-client"
-                          type="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="grid gap-2">
-                        <Label htmlFor="confirm-password-client">Confirmar Senha</Label>
-                        <Input
-                          id="confirm-password-client"
-                          type="password"
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <Button type="button" variant="outline" onClick={handlePreviousStep}>
-                          <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
-                        </Button>
-                        <Button type="submit">Cadastrar</Button>
-                        {errorMessage && <FormError message="Verifique seus dados." />}
-                      </div>
-                    </>
-                  )}
+                  <div className="grid grid-cols-full gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="firstName-client">Primeiro nome</Label>
+                      <Input
+                        id="firstName-client"
+                        value={firstName}
+                        onChange={(e) => {
+                          setFirstName(onlyLetters(e.target.value));
+                        }}
+                        maxLength={30}
+                        placeholder="Nome"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="email-client">Email</Label>
+                    <Input
+                      id="email-client"
+                      type="email"
+                      placeholder="nome@exemplo.com"
+                      value={email}
+                      onChange={(e) =>{ 
+                        setEmail(e.target.value)
+                        setFieldErrors((prev) => ({ ...prev, email: "" }));
+                      }}
+                      className={fieldErrors.email ? "border-red-500" : ""}
+                      required
+                    />
+                    {fieldErrors.email && <FormError message={fieldErrors.email} />}
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="password-client">Senha</Label>
+                    <Input
+                      id="password-client"
+                      type="password"
+                      value={password}
+                      className={fieldErrors.password ? "border-red-500" : ""}
+                      onChange={
+                        (e) => {
+                          setPassword(e.target.value)
+                          setFieldErrors((prev) => ({ ...prev, password: "" }));
+                        }
+                      }
+                      required
+                    />
+                    {fieldErrors.password && <FormError message={fieldErrors.password} />}
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="confirm-password-client">Confirmar Senha</Label>
+                    <Input
+                      id="confirm-password-client"
+                      type="password"
+                      value={confirmPassword}
+                      className={fieldErrors.confirmPassword ? "border-red-500" : ""}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value)
+                        setFieldErrors((prev) => ({ ...prev, confirmPassword: "" }));
+                      }}
+                    />
+                  </div>
+                  {fieldErrors.confirmPassword && <FormError message={fieldErrors.confirmPassword} />}
+                  <div className="grid grid-cols-full gap-4">
+                    <Button type="submit">Cadastrar</Button>
+                  </div>
                 </div>
               </form>
             </TabsContent>
@@ -669,6 +601,6 @@ export default function RegisterPage() {
           </div>
         </CardFooter>
       </Card>
-    </div>
+    </div >
   )
 }
