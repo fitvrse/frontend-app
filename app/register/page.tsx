@@ -66,6 +66,23 @@ export default function RegisterPage() {
     setCurrentStep(2)
   }
 
+  const resetFormFields = () => {
+  setFirstName("");
+  setLastName("");
+  setEmail("");
+  setDocument("");
+  setPhone("");
+  setGymName("");
+  setProfessionalId("");
+  setUsername("");
+  setPassword("");
+  setConfirmPassword("");
+  setGender("");
+  setFieldErrors({});
+  setHasError(false);
+  setErrorMessage("");
+};
+
   const handlePreviousStep = () => {
     setCurrentStep(1)
   }
@@ -117,12 +134,12 @@ export default function RegisterPage() {
     event.preventDefault();
 
     if (password !== confirmPassword) {
-    setFieldErrors((prev) => ({
-      ...prev,
-      confirmPassword: "As senhas não coincidem",
-    }));
-    return;
-  }
+      setFieldErrors((prev) => ({
+        ...prev,
+        confirmPassword: "As senhas não coincidem",
+      }));
+      return;
+    }
 
     return registerUserClient({
       email,
@@ -143,7 +160,13 @@ export default function RegisterPage() {
           <CardDescription>{currentStep === 1 ? "Informações pessoais" : "Informações de acesso"}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue={userType} onValueChange={setUserType}>
+          <Tabs defaultValue={userType}
+            value={userType}
+            onValueChange={(value) => {
+              setUserType(value as "client" | "gym" | "personal" | "nutritionist");
+              setCurrentStep(1);
+              resetFormFields();
+            }}>
             <TabsList className="grid grid-cols-4 mb-6">
               <TabsTrigger value="client" className="flex flex-col items-center gap-1 py-2">
                 <User className="h-4 w-4" />
@@ -188,7 +211,7 @@ export default function RegisterPage() {
                       type="email"
                       placeholder="nome@exemplo.com"
                       value={email}
-                      onChange={(e) =>{ 
+                      onChange={(e) => {
                         setEmail(e.target.value)
                         setFieldErrors((prev) => ({ ...prev, email: "" }));
                       }}
