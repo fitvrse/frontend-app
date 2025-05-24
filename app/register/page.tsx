@@ -10,78 +10,82 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dumbbell, Users, Apple, User, ArrowLeft, ArrowRight } from "lucide-react"
+import { Dumbbell, Users, Apple, User, ArrowLeft, ArrowRight, Loader2 } from "lucide-react"
 import { MaskedInput } from "@/components/ui/masked-input"
 import { onlyLetters } from "@/utils/sanitize.utils"
 import FormError from "./formError"
-import { registerUserClient } from "@/service/userService"
+import { registerUserClient, registerPersonalTrainer } from "@/service/userService"
+import { set } from "date-fns"
 
 export default function RegisterPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const typeParam = searchParams.get("type")
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const typeParam = searchParams.get("type");
 
-  const [userType, setUserType] = useState(typeParam || "client")
-  const [currentStep, setCurrentStep] = useState(1)
-  const [documentType, setDocumentType] = useState<"cpf" | "cnpj">("cpf")
+  const [userType, setUserType] = useState(typeParam || "client");
+  const [currentStep, setCurrentStep] = useState(1);
+  const [documentType, setDocumentType] = useState<"cpf" | "cnpj">("cpf");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Step 1 fields
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [document, setDocument] = useState("")
-  const [phone, setPhone] = useState("")
-  const [gymName, setGymName] = useState("")
-  const [professionalId, setProfessionalId] = useState("") //  CRN or CREF  
-  const [hasError, setHasError] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
-  const [gender, setGender] = useState('')
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [document, setDocument] = useState("");
+  const [phone, setPhone] = useState("");
+  const [gymName, setGymName] = useState("");
+  const [professionalId, setProfessionalId] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [cnpj, setCnpj] = useState<string>("");
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [gender, setGender] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Step 2 fields
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleNextStep = () => {
     // Basic validation for step 1
-    if (currentStep === 1) {
-      let isValid = true
+    // if (currentStep === 1) {
+    //   let isValid = true
 
-      if (userType === "client") {
-        isValid = !!firstName && !!lastName && !!email && !!document && !!phone
-      } else if (userType === "gym") {
-        isValid = !!gymName && !!email && !!document && !!phone
-      } else {
-        // Personal or Nutritionist
-        isValid = !!firstName && !!lastName && !!email && !!professionalId && !!document && !!phone
-      }
+    //   if (userType === "client") {
+    //     isValid = !!firstName && !!lastName && !!email && !!document && !!phone
+    //   } else if (userType === "gym") {
+    //     isValid = !!gymName && !!email && !!document && !!phone
+    //   } else {
+    //     // Personal or Nutritionist
+    //     isValid = !!firstName && !!lastName && !!email && !!professionalId && !!document && !!phone
+    //   }
 
-      if (!isValid) {
-        alert("Por favor, preencha todos os campos obrigatórios.")
-        return
-      }
-    }
+    //   if (!isValid) {
+    //     alert("Por favor, preencha todos os campos obrigatórios.")
+    //     return
+    //   }
+    // }
 
     setCurrentStep(2)
   }
 
   const resetFormFields = () => {
-  setFirstName("");
-  setLastName("");
-  setEmail("");
-  setDocument("");
-  setPhone("");
-  setGymName("");
-  setProfessionalId("");
-  setUsername("");
-  setPassword("");
-  setConfirmPassword("");
-  setGender("");
-  setFieldErrors({});
-  setHasError(false);
-  setErrorMessage("");
-};
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setDocument("");
+    setPhone("");
+    setGymName("");
+    setProfessionalId("");
+    setUsername("");
+    setPassword("");
+    setConfirmPassword("");
+    setGender("");
+    setFieldErrors({});
+    setHasError(false);
+    setErrorMessage("");
+  };
 
   const handlePreviousStep = () => {
     setCurrentStep(1)
@@ -148,8 +152,38 @@ export default function RegisterPage() {
       setFieldErrors,
       setErrorMessage,
       setHasError,
+      setIsLoading,
       router
     });
+  }
+
+  function registerPersonal(event: React.FormEvent) {
+    event.preventDefault();
+
+    if (password !== confirmPassword) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        confirmPassword: "As senhas não coincidem",
+      }));
+      return;
+    }
+
+    return registerPersonalTrainer({
+      email,
+      password,
+      phone,
+      username,
+      firstName,
+      lastName,
+      professionalId,
+      cpf,
+      cnpj,
+      setIsLoading,
+      router,
+      setFieldErrors,
+      setErrorMessage,
+      setHasError
+    })
   }
 
   return (
@@ -249,10 +283,19 @@ export default function RegisterPage() {
                         setFieldErrors((prev) => ({ ...prev, confirmPassword: "" }));
                       }}
                     />
+                    {fieldErrors.confirmPassword && <FormError message={fieldErrors.confirmPassword} />}
                   </div>
-                  {fieldErrors.confirmPassword && <FormError message={fieldErrors.confirmPassword} />}
-                  <div className="grid grid-cols-full gap-4">
-                    <Button type="submit">Cadastrar</Button>
+                  <div className="grid grid-cols-full">
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Cadastrando...
+                        </>
+                      ) : (
+                        "Cadastrar"
+                      )}
+                    </Button>
                   </div>
                 </div>
               </form>
@@ -260,7 +303,7 @@ export default function RegisterPage() {
 
             {/* Personal Trainer Registration Form */}
             <TabsContent value="personal">
-              <form onSubmit={currentStep === 2 ? handleRegister : (e) => e.preventDefault()}>
+              <form onSubmit={registerPersonal}>
                 <div className="grid gap-4">
                   {currentStep === 1 ? (
                     <>
@@ -295,56 +338,83 @@ export default function RegisterPage() {
                           type="email"
                           placeholder="nome@exemplo.com"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          className={fieldErrors.email ? "border-red-500" : ""}
+                          onChange={(e) => { 
+                            setEmail(e.target.value)
+                            setFieldErrors((prev) => ({ ...prev, email: "" }));
+                          }}
                           required
                           maxLength={100}
                         />
+                        {fieldErrors.email && <FormError message={fieldErrors.email} />}
                       </div>
                       <div className="grid gap-2">
                         <Label htmlFor="cref-personal">CREF</Label>
-                        <Input
+                        <MaskedInput
+                          placeholder="000000-G/UF"
+                          mask="000000-A/aa"
+                          definitions={{
+                            'A': /[A-Za-z]/,
+                            'a': /[A-Za-z]/,
+                          }}
                           id="cref-personal"
                           value={professionalId}
-                          onChange={(e) => setProfessionalId(e.target.value)}
+                          className={fieldErrors.professionalId ? "border-red-500" : ""}
+                          onChange={(e: any) => setProfessionalId(e.target.value)}
                           required
                         />
+                        {fieldErrors.professionalId && <FormError message={fieldErrors.professionalId} />}
                       </div>
                       <div className="grid gap-2">
                         <Label>CPF/CNPJ</Label>
-                        <Tabs defaultValue="cpf" onValueChange={(value) => setDocumentType(value as "cpf" | "cnpj")}>
+                        <Tabs defaultValue="cpf" onValueChange={(value) => {
+                          setDocumentType(value as "cpf" | "cnpj");
+                        }}>
                           <TabsList className="grid w-full grid-cols-2">
                             <TabsTrigger value="cpf">CPF</TabsTrigger>
                             <TabsTrigger value="cnpj">CNPJ</TabsTrigger>
                           </TabsList>
                           <TabsContent value="cpf" className="mt-2">
-                            <Input
-                              placeholder="CPF (apenas números)"
-                              value={document}
-                              onChange={(e) => setDocument(formatDocument(e.target.value))}
-                              maxLength={11}
+                            <MaskedInput
+                              placeholder="CPF"
+                              mask="000.000.000-00"
+                              value={cpf}
+                              onAccept={(value: string) => {
+                                setCpf(value)
+                                // setFieldErrors((prev) => ({ ...prev, cpf: "" }))
+                              }}
+                              className={fieldErrors.cpf ? "border-red-500" : ""}
                               required
                             />
+                            {fieldErrors.cpf && <FormError message={fieldErrors.cpf} />}
                           </TabsContent>
+
                           <TabsContent value="cnpj" className="mt-2">
-                            <Input
-                              placeholder="CNPJ (apenas números)"
-                              value={document}
-                              onChange={(e) => setDocument(formatDocument(e.target.value))}
-                              maxLength={14}
-                              required
+                            <MaskedInput
+                              placeholder="CNPJ"
+                              mask="00.000.000/0000-00"
+                              value={cnpj}
+                              className={fieldErrors.cnpj ? "border-red-500" : ""}
+                              onAccept={(value: string) => { 
+                                setCnpj(value)
+                                // setFieldErrors((prev) => ({ ...prev, cnpj: "" }))
+                              }}
                             />
                           </TabsContent>
+                          {fieldErrors.cnpj && <FormError message={fieldErrors.cnpj} />}
                         </Tabs>
                       </div>
                       <div className="grid gap-2">
                         <Label htmlFor="phone-personal">Telefone (apenas números)</Label>
-                        <Input
+                        <MaskedInput
                           id="phone-personal"
+                          placeholder="(00) 00000-0000"
+                          mask="(00) 00000-0000"
                           value={phone}
-                          onChange={(e) => setPhone(formatPhone(e.target.value))}
-                          maxLength={11}
+                          onAccept={(value: string) => setPhone(value)}
                           required
                         />
+                        {fieldErrors.phone && <FormError message={fieldErrors.phone} />}
                       </div>
                       <Button type="button" onClick={handleNextStep} className="w-full">
                         Próximo <ArrowRight className="ml-2 h-4 w-4" />
@@ -358,9 +428,15 @@ export default function RegisterPage() {
                           id="username-personal"
                           placeholder="Ex: personaltrainerpedro"
                           value={username}
-                          onChange={(e) => setUsername(e.target.value)}
+                          onChange={(e) => {
+                            setUsername(e.target.value)
+                            setFieldErrors({ ...fieldErrors, username: "" })
+                          }}
+                          className={fieldErrors.username ? "border-red-500" : ""}
+                          maxLength={30}
                           required
                         />
+                        {fieldErrors.username && <FormError message={fieldErrors.username} />}
                       </div>
                       <div className="grid gap-2">
                         <Label htmlFor="password-personal">Senha</Label>
@@ -368,9 +444,14 @@ export default function RegisterPage() {
                           id="password-personal"
                           type="password"
                           value={password}
-                          onChange={(e) => setPassword(e.target.value)}
+                          onChange={(e) => {
+                            setPassword(e.target.value)
+                            setFieldErrors({ ...fieldErrors, password: "" })
+                          }}
+                          className={fieldErrors.password ? "border-red-500" : ""}
                           required
                         />
+                        {fieldErrors.password && <FormError message={fieldErrors.password} />}
                       </div>
                       <div className="grid gap-2">
                         <Label htmlFor="confirm-password-personal">Confirmar Senha</Label>
@@ -378,15 +459,31 @@ export default function RegisterPage() {
                           id="confirm-password-personal"
                           type="password"
                           value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          onChange={(e) =>{ 
+                            setConfirmPassword(e.target.value)
+                            setFieldErrors({ ...fieldErrors, confirmPassword: "" })
+                          }}
+                          className={fieldErrors.confirmPassword ? "border-red-500" : ""}
                           required
                         />
+                        {fieldErrors.confirmPassword && <FormError message={fieldErrors.confirmPassword} />}
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <Button type="button" variant="outline" onClick={handlePreviousStep}>
                           <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
                         </Button>
-                        <Button type="submit">Cadastrar</Button>
+
+                        <Button type="submit" disabled={isLoading}>
+                          {isLoading ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Cadastrando...
+                            </>
+                          ) : (
+                            "Cadastrar"
+                          )}
+                        </Button>
+                        {errorMessage && <FormError message={errorMessage} />}
                       </div>
                     </>
                   )}
