@@ -1,4 +1,3 @@
-// components/FormError.tsx
 type FormErrorProps = {
   message?: string;
 };
