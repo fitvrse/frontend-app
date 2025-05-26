@@ -50,7 +50,7 @@ export async function registerUserClient({
 
     try {
         const response = await api.post("/usuarios/cadastrar/cliente", user);
-
+        
         if (response.status === 201) {
             router.push("/login");
         }
@@ -111,7 +111,6 @@ export async function registerPersonalTrainer({
         }
     } catch (error: any) {
         const message = error.response?.data?.message || "Erro desconhecido"
-        console.log(message);
 
         const newFieldErrors: Record<string, string> = {}
         if (message.includes("Email")) {

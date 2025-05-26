@@ -21,9 +21,6 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Simulação de login - em produção, isso seria uma chamada de API
-    console.log("Login com:", { email, password, userType })
-
     // Redirecionar para o dashboard apropriado
     switch (userType) {
       case "gym":
