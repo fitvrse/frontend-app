@@ -10,9 +10,9 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 180 40% 18%; /* #1b4040 convertido para HSL */
+    --primary: 180 40% 18%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 78 97% 44%; /* #abd904 convertido para HSL */
+    --secondary: 78 97% 44%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
@@ -22,7 +22,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 180 40% 18%; /* Usando a cor primária para o ring */
+    --ring: 180 40% 18%;
     --radius: 0.5rem;
   }
 
@@ -33,9 +33,9 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 180 40% 18%; /* Mantendo a mesma cor primária no tema escuro */
+    --primary: 180 40% 18%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 78 97% 44%; /* Mantendo a mesma cor secundária no tema escuro */
+    --secondary: 78 97% 44%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
@@ -45,7 +45,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 78 97% 44%; /* Usando a cor secundária para o ring no tema escuro */
+    --ring: 78 97% 44%;
   }
 }
 
