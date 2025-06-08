@@ -57,10 +57,26 @@ export function DashboardSidebar({ userType, isSidebarOpen }: SidebarProps) {
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({})
 
   const toggleSubmenu = (label: string) => {
-    setOpenSubmenus((prev) => ({
-      ...prev,
-      [label]: !prev[label],
-    }))
+    setOpenSubmenus((prev) => {
+      // Se o submenu clicado já está aberto, fechamos ele
+      if (prev[label]) {
+        return {
+          ...prev,
+          [label]: false,
+        }
+      }
+
+      // Caso contrário, fechamos todos os outros e abrimos apenas o clicado
+      const newState: Record<string, boolean> = {}
+      Object.keys(prev).forEach((key) => {
+        newState[key] = false
+      })
+
+      return {
+        ...newState,
+        [label]: true,
+      }
+    })
   }
 
   const routes = {
@@ -84,26 +100,59 @@ export function DashboardSidebar({ userType, isSidebarOpen }: SidebarProps) {
     ],
     personal: [
       { href: "/personal/dashboard", label: "Painel", icon: Home },
-      { href: "/personal/students", label: "Alunos", icon: Users },
-      
       {
-        label: " Gerenciador de Treinos",
+        label: "Gestão de Alunos",
+        icon: Users,
+        submenu: [
+          { href: "/personal/students", label: "Alunos", icon: Users },
+          { href: "/personal/groups", label: "Grupos", icon: Users },
+        ],
+      },
+      {
+        label: "Templates",
         icon: Dumbbell,
         submenu: [
           { href: "/personal/workouts", label: "Treinos", icon: Dumbbell },
           { href: "/personal/aerobic-training", label: "Treinos Aeróbicos", icon: Activity },
+          { href: "/personal/assessments", label: "Avaliações", icon: Activity },
+        ],
+      },
+      {
+        label: "Banco de Dados",
+        icon: BookOpen,
+        submenu: [
           { href: "/personal/exercises", label: "Exercícios", icon: BookOpen },
           { href: "/personal/training-categories", label: "Categorias", icon: BookOpen },
         ],
       },
-      
-      { href: "/personal/assessments", label: "Avaliações", icon: Activity },
+      { href: "/personal/challenges", label: "Desafios", icon: Dumbbell },
       { href: "/personal/progress", label: "Progressos", icon: LineChart },
       { href: "/personal/schedule", label: "Agenda", icon: Calendar },
-      { href: "/personal/reports", label: "Relatórios", icon: BarChart },
-      { href: "/personal/finances", label: "Financeiro", icon: DollarSign },
-      { href: "/personal/marketing", label: "Marketing", icon: Megaphone },
-      { href: "/personal/wallet", label: "Carteira", icon: Wallet },
+      {
+        label: "Comercial",
+        icon: Megaphone,
+        submenu: [
+          { href: "/personal/store", label: "Loja", icon: Megaphone },
+          { href: "/personal/finances", label: "Financeiro", icon: DollarSign },
+        ],
+      },
+      { href: "/personal/plans", label: "Planos", icon: DollarSign },
+      {
+        label: "Marketing",
+        icon: Megaphone,
+        submenu: [
+          { href: "/personal/marketing", label: "Marketing", icon: Megaphone },
+          { href: "/personal/promotional-materials", label: "Meteriais de Divulgação", icon: BarChart },
+        ],
+      },
+      {
+        label: "Ferramentas",
+        icon: Users,
+        submenu: [
+          { href: "/personal/meeting", label: "Videochamada", icon: UserPlus },
+          { href: "/personal/reports", label: "Relatórios", icon: BarChart },
+        ],
+      },
       { href: "/personal/settings", label: "Configurações", icon: Settings },
     ],
     nutritionist: [

@@ -7,8 +7,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Bell, Menu, MessageSquare, User, Wallet, X } from "lucide-react"
@@ -77,13 +77,15 @@ export function DashboardHeader({ userType, userName, onSidebarToggle, isSidebar
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Perfil</span>
+            <DropdownMenuItem asChild>
+              <Link href={`/${userType}/my-profile`}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Perfil</span>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Bell className="mr-2 h-4 w-4" />
-              <span>Notificações</span>
+              <span>Configurações</span>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <MessageSquare className="mr-2 h-4 w-4" />
