@@ -13,7 +13,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Copy, Dumbbell, Eye, Filter, Info, Plus, Search, SlidersHorizontal, Trash2, Trophy, Users } from "lucide-react"
+import {
+  Copy,
+  Activity,
+  Eye,
+  Filter,
+  Info,
+  Plus,
+  Search,
+  SlidersHorizontal,
+  Trash2,
+  Trophy,
+  Users,
+  Heart,
+} from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import {
   Pagination,
@@ -33,21 +46,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import Link from "next/link"
 
-export default function PersonalWorkoutsPage() {
+export default function PersonalAerobicTrainingPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Treinos</h1>
-        <p className="text-muted-foreground">Crie e gerencie treinos para seus alunos</p>
+        <h1 className="text-3xl font-bold tracking-tight">Treinos Aeróbicos</h1>
+        <p className="text-muted-foreground">Crie e gerencie treinos aeróbicos para seus alunos</p>
       </div>
 
       <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:justify-between">
         <div className="flex items-center gap-2 w-full md:w-auto">
           <div className="relative w-full md:w-80">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input type="search" placeholder="Buscar treinos..." className="pl-8 w-full md:w-80" />
+            <Input type="search" placeholder="Buscar treinos aeróbicos..." className="pl-8 w-full md:w-80" />
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -59,11 +71,11 @@ export default function PersonalWorkoutsPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Filtrar por</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Tipo de treino</DropdownMenuItem>
-              <DropdownMenuItem>Grupo muscular</DropdownMenuItem>
-              <DropdownMenuItem>Nível de dificuldade</DropdownMenuItem>
+              <DropdownMenuItem>Tipo de cardio</DropdownMenuItem>
+              <DropdownMenuItem>Intensidade</DropdownMenuItem>
+              <DropdownMenuItem>Duração</DropdownMenuItem>
               <DropdownMenuItem>Data de criação</DropdownMenuItem>
-              <DropdownMenuItem>Categoria</DropdownMenuItem>
+              <DropdownMenuItem>Objetivo</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Button variant="outline" size="icon">
@@ -72,12 +84,10 @@ export default function PersonalWorkoutsPage() {
           </Button>
         </div>
         <div className="flex items-center gap-2 w-full md:w-auto">
-          <Link href="/personal/workouts-details">
-            <Button size="sm" className="h-9">
-              <Plus className="mr-2 h-4 w-4" />
-              Criar Treino
-            </Button>
-          </Link>
+          <Button size="sm" className="h-9">
+            <Plus className="mr-2 h-4 w-4" />
+            Criar Treino Aeróbico
+          </Button>
         </div>
       </div>
 
@@ -91,8 +101,8 @@ export default function PersonalWorkoutsPage() {
           <Card>
             <CardHeader className="p-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base">Todos os Treinos</CardTitle>
-                <CardDescription>Total: 24 treinos</CardDescription>
+                <CardTitle className="text-base">Todos os Treinos Aeróbicos</CardTitle>
+                <CardDescription>Total: 16 treinos</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-0">
@@ -106,83 +116,91 @@ export default function PersonalWorkoutsPage() {
                 <TableBody>
                   {[
                     {
-                      id: "T001",
-                      name: "Hipertrofia - Membros Superiores",
-                      type: "Força",
-                      level: "Intermediário",
+                      id: "C001",
+                      name: "HIIT - Queima de Gordura",
+                      type: "HIIT",
+                      intensity: "Alta",
+                      duration: "30 min",
                       createdAt: "10/01/2023",
-                      days: ["Seg", "Qua", "Sex"],
-                      category: "Hipertrofia",
+                      days: ["Ter", "Qui"],
+                      goal: "Emagrecimento",
                       students: 8,
                     },
                     {
-                      id: "T002",
-                      name: "HIIT - Queima de Gordura",
-                      type: "Cardio",
-                      level: "Avançado",
+                      id: "C002",
+                      name: "Cardio Moderado - Esteira",
+                      type: "Esteira",
+                      intensity: "Média",
+                      duration: "45 min",
                       createdAt: "15/02/2023",
-                      days: ["Ter", "Qui"],
-                      category: "Emagrecimento",
+                      days: ["Seg", "Qua", "Sex"],
+                      goal: "Resistência",
                       students: 12,
                     },
                     {
-                      id: "T003",
-                      name: "Força - Full Body",
-                      type: "Força",
-                      level: "Iniciante",
+                      id: "C003",
+                      name: "Ciclismo Intervalado",
+                      type: "Bicicleta",
+                      intensity: "Alta",
+                      duration: "40 min",
                       createdAt: "05/03/2023",
-                      days: ["Seg", "Qua", "Sex"],
-                      category: "Força",
+                      days: ["Ter", "Qui", "Sáb"],
+                      goal: "Condicionamento",
                       students: 5,
                     },
                     {
-                      id: "T004",
-                      name: "Resistência - Cardio",
-                      type: "Cardio",
-                      level: "Intermediário",
+                      id: "C004",
+                      name: "Caminhada Leve",
+                      type: "Caminhada",
+                      intensity: "Baixa",
+                      duration: "60 min",
                       createdAt: "20/03/2023",
-                      days: ["Ter", "Qui", "Sáb"],
-                      category: "Resistência",
+                      days: ["Seg", "Qua", "Sex"],
+                      goal: "Recuperação",
                       students: 7,
                     },
                     {
-                      id: "T005",
-                      name: "Hipertrofia - Membros Inferiores",
-                      type: "Força",
-                      level: "Avançado",
+                      id: "C005",
+                      name: "Corrida Intervalada",
+                      type: "Corrida",
+                      intensity: "Alta",
+                      duration: "35 min",
                       createdAt: "01/04/2023",
-                      days: ["Ter", "Sex"],
-                      category: "Hipertrofia",
+                      days: ["Ter", "Qui"],
+                      goal: "Emagrecimento",
                       students: 6,
                     },
                     {
-                      id: "T006",
-                      name: "Funcional - Core",
-                      type: "Funcional",
-                      level: "Intermediário",
+                      id: "C006",
+                      name: "Elíptico - Baixo Impacto",
+                      type: "Elíptico",
+                      intensity: "Média",
+                      duration: "50 min",
                       createdAt: "15/04/2023",
-                      days: ["Seg", "Qua", "Sex"],
-                      category: "Funcional",
+                      days: ["Seg", "Sex"],
+                      goal: "Resistência",
                       students: 9,
                     },
                     {
-                      id: "T007",
-                      name: "Mobilidade e Flexibilidade",
-                      type: "Mobilidade",
-                      level: "Iniciante",
+                      id: "C007",
+                      name: "Remo Intervalado",
+                      type: "Remo",
+                      intensity: "Alta",
+                      duration: "25 min",
                       createdAt: "01/05/2023",
-                      days: ["Ter", "Qui"],
-                      category: "Mobilidade",
+                      days: ["Ter", "Qui", "Sáb"],
+                      goal: "Condicionamento",
                       students: 4,
                     },
                     {
-                      id: "T008",
-                      name: "Treino de Potência",
-                      type: "Força",
-                      level: "Avançado",
+                      id: "C008",
+                      name: "Cardio Misto",
+                      type: "Misto",
+                      intensity: "Média",
+                      duration: "45 min",
                       createdAt: "10/05/2023",
                       days: ["Seg", "Qua", "Sex"],
-                      category: "Potência",
+                      goal: "Emagrecimento",
                       students: 3,
                     },
                   ].map((workout) => (
@@ -201,7 +219,7 @@ export default function PersonalWorkoutsPage() {
                             <DialogContent className="sm:max-w-md">
                               <DialogHeader>
                                 <DialogTitle>{workout.name}</DialogTitle>
-                                <DialogDescription>Informações detalhadas do treino</DialogDescription>
+                                <DialogDescription>Informações detalhadas do treino aeróbico</DialogDescription>
                               </DialogHeader>
                               <div className="grid gap-4 py-4">
                                 <div className="grid grid-cols-2 gap-2">
@@ -211,8 +229,24 @@ export default function PersonalWorkoutsPage() {
                                   <div className="text-sm font-medium">Tipo:</div>
                                   <div className="text-sm">{workout.type}</div>
 
-                                  <div className="text-sm font-medium">Nível:</div>
-                                  <div className="text-sm">{workout.level}</div>
+                                  <div className="text-sm font-medium">Intensidade:</div>
+                                  <div className="text-sm">
+                                    <Badge
+                                      variant={
+                                        workout.intensity === "Alta"
+                                          ? "destructive"
+                                          : workout.intensity === "Média"
+                                            ? "default"
+                                            : "secondary"
+                                      }
+                                      className="text-xs"
+                                    >
+                                      {workout.intensity}
+                                    </Badge>
+                                  </div>
+
+                                  <div className="text-sm font-medium">Duração:</div>
+                                  <div className="text-sm">{workout.duration}</div>
 
                                   <div className="text-sm font-medium">Criado em:</div>
                                   <div className="text-sm">{workout.createdAt}</div>
@@ -226,9 +260,9 @@ export default function PersonalWorkoutsPage() {
                                     ))}
                                   </div>
 
-                                  <div className="text-sm font-medium">Categoria:</div>
+                                  <div className="text-sm font-medium">Objetivo:</div>
                                   <div className="text-sm">
-                                    <Badge variant="secondary">{workout.category}</Badge>
+                                    <Badge variant="secondary">{workout.goal}</Badge>
                                   </div>
 
                                   <div className="text-sm font-medium">Alunos:</div>
@@ -242,7 +276,7 @@ export default function PersonalWorkoutsPage() {
                               </DialogFooter>
                             </DialogContent>
                           </Dialog>
-                          <Button variant="ghost" size="icon" title="Ver Exercícios">
+                          <Button variant="ghost" size="icon" title="Ver Detalhes">
                             <Eye className="h-4 w-4" />
                           </Button>
                           <Button variant="ghost" size="icon" title="Exportar para Alunos">
@@ -278,9 +312,6 @@ export default function PersonalWorkoutsPage() {
                       <PaginationLink href="#">2</PaginationLink>
                     </PaginationItem>
                     <PaginationItem>
-                      <PaginationLink href="#">3</PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
                       <PaginationEllipsis />
                     </PaginationItem>
                     <PaginationItem>
@@ -296,17 +327,17 @@ export default function PersonalWorkoutsPage() {
           <Card>
             <CardHeader className="p-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base">Templates de Treino</CardTitle>
-                <CardDescription>Total: 15 templates</CardDescription>
+                <CardTitle className="text-base">Templates de Treino Aeróbico</CardTitle>
+                <CardDescription>Total: 10 templates</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-0">
               <div className="h-[400px] flex items-center justify-center">
                 <div className="text-center">
-                  <Dumbbell className="mx-auto h-16 w-16 text-muted" />
-                  <h3 className="mt-4 text-lg font-medium">Templates de Treino</h3>
+                  <Activity className="mx-auto h-16 w-16 text-muted" />
+                  <h3 className="mt-4 text-lg font-medium">Templates de Treino Aeróbico</h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Visualize e gerencie seus templates de treino reutilizáveis.
+                    Visualize e gerencie seus templates de treino aeróbico reutilizáveis.
                   </p>
                 </div>
               </div>
@@ -317,16 +348,18 @@ export default function PersonalWorkoutsPage() {
           <Card>
             <CardHeader className="p-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base">Treinos Atribuídos</CardTitle>
-                <CardDescription>Total: 18 treinos atribuídos</CardDescription>
+                <CardTitle className="text-base">Treinos Aeróbicos Atribuídos</CardTitle>
+                <CardDescription>Total: 12 treinos atribuídos</CardDescription>
               </div>
             </CardHeader>
             <CardContent className="p-0">
               <div className="h-[400px] flex items-center justify-center">
                 <div className="text-center">
-                  <Users className="mx-auto h-16 w-16 text-muted" />
-                  <h3 className="mt-4 text-lg font-medium">Treinos Atribuídos</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">Visualize os treinos atribuídos aos seus alunos.</p>
+                  <Heart className="mx-auto h-16 w-16 text-muted" />
+                  <h3 className="mt-4 text-lg font-medium">Treinos Aeróbicos Atribuídos</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Visualize os treinos aeróbicos atribuídos aos seus alunos.
+                  </p>
                 </div>
               </div>
             </CardContent>

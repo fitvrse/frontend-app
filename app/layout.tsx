@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Fitness App",
   description: "Aplicativo para gestão de academias, personal trainers e nutricionistas",
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

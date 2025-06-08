@@ -65,7 +65,7 @@ export default function AssessmentPage() {
       type: "Desempenho",
       status: "completed",
       professional: "Carlos Silva",
-      description: "Avaliação de força máxima e resistência muscular para definição de cargas de treino.",
+      description: "Avaliação de força máxima e resistência muscular para defini������ão de cargas de treino.",
       formData: {
         supino: "80 kg",
         legPress: "200 kg",

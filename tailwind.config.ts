@@ -51,7 +51,6 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Adicionando as cores da identidade visual diretamente
         brand: {
           primary: "#1b4040",
           secondary: "#abd904",

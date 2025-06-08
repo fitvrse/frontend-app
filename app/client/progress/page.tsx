@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -18,6 +20,73 @@ import {
 } from "lucide-react"
 
 export default function ClientProgressPage() {
+  const currentStats = [
+    {
+      title: "Peso Atual",
+      value: "72.5 kg",
+      change: "-2.3 kg",
+      trend: "down",
+      description: "Desde o início (há 2 meses)",
+    },
+    {
+      title: "% de Gordura",
+      value: "18.2%",
+      change: "-3.5%",
+      trend: "down",
+      description: "Desde o início (há 2 meses)",
+    },
+    {
+      title: "Massa Muscular",
+      value: "32.8 kg",
+      change: "+1.2 kg",
+      trend: "up",
+      description: "Desde o início (há 2 meses)",
+    },
+    {
+      title: "IMC",
+      value: "24.1",
+      change: "-0.8",
+      trend: "down",
+      description: "Normal (18.5 - 24.9)",
+    },
+  ]
+
+  const goals = [
+    { name: "Perder 5kg", progress: 46, target: "2.7kg restantes", trend: "down" },
+    { name: "Reduzir % de gordura para 15%", progress: 60, target: "3.2% restantes", trend: "down" },
+    { name: "Aumentar massa muscular em 3kg", progress: 40, target: "1.8kg restantes", trend: "up" },
+  ]
+
+  const assessments = [
+    { date: "10/05/2023", weight: "72.5 kg", fat: "18.2%", muscle: "32.8 kg" },
+    { date: "10/04/2023", weight: "73.8 kg", fat: "19.5%", muscle: "32.2 kg" },
+    { date: "10/03/2023", weight: "74.8 kg", fat: "21.7%", muscle: "31.6 kg" },
+  ]
+
+  const trainingFrequency = [
+    { week: "Esta semana", days: 3, target: 5, status: "Em andamento" },
+    { week: "Semana passada", days: 4, target: 5, status: "Concluído" },
+    { week: "Há 2 semanas", days: 5, target: 5, status: "Concluído" },
+    { week: "Há 3 semanas", days: 3, target: 5, status: "Concluído" },
+  ]
+
+  const measurements = [
+    { name: "Braço (direito)", current: "35.2 cm", start: "33.5 cm", change: "+1.7 cm", trend: "up" },
+    { name: "Peito", current: "98.5 cm", start: "100.2 cm", change: "-1.7 cm", trend: "down" },
+    { name: "Cintura", current: "82.3 cm", start: "87.5 cm", change: "-5.2 cm", trend: "down" },
+    { name: "Quadril", current: "95.8 cm", start: "98.2 cm", change: "-2.4 cm", trend: "down" },
+    { name: "Coxa (direita)", current: "58.5 cm", start: "56.8 cm", change: "+1.7 cm", trend: "up" },
+    { name: "Panturrilha (direita)", current: "38.2 cm", start: "37.5 cm", change: "+0.7 cm", trend: "up" },
+  ]
+
+  const strengthProgress = [
+    { name: "Supino Reto", current: "20kg", start: "15kg", change: "+5kg", trend: "up", percentage: 33 },
+    { name: "Agachamento", current: "40kg", start: "25kg", change: "+15kg", trend: "up", percentage: 60 },
+    { name: "Levantamento Terra", current: "50kg", start: "35kg", change: "+15kg", trend: "up", percentage: 43 },
+    { name: "Remada Curvada", current: "25kg", start: "18kg", change: "+7kg", trend: "up", percentage: 39 },
+    { name: "Desenvolvimento", current: "15kg", start: "12kg", change: "+3kg", trend: "up", percentage: 25 },
+  ]
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -26,66 +95,29 @@ export default function ClientProgressPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Peso Atual</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end justify-between">
-              <div className="text-2xl font-bold">72.5 kg</div>
-              <div className="flex items-center text-green-500 text-sm">
-                <ArrowDown className="h-4 w-4 mr-1" />
-                <span>2.3 kg</span>
+        {currentStats.map((stat, index) => (
+          <Card key={index}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">{stat.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-end justify-between">
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <div
+                  className={`flex items-center text-sm ${stat.trend === "down" ? "text-green-500" : "text-blue-500"}`}
+                >
+                  {stat.trend === "down" ? (
+                    <ArrowDown className="h-4 w-4 mr-1" />
+                  ) : (
+                    <ArrowUp className="h-4 w-4 mr-1" />
+                  )}
+                  <span>{stat.change}</span>
+                </div>
               </div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Desde o início (há 2 meses)</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">% de Gordura</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end justify-between">
-              <div className="text-2xl font-bold">18.2%</div>
-              <div className="flex items-center text-green-500 text-sm">
-                <ArrowDown className="h-4 w-4 mr-1" />
-                <span>3.5%</span>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Desde o início (há 2 meses)</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Massa Muscular</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end justify-between">
-              <div className="text-2xl font-bold">32.8 kg</div>
-              <div className="flex items-center text-green-500 text-sm">
-                <ArrowUp className="h-4 w-4 mr-1" />
-                <span>1.2 kg</span>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Desde o início (há 2 meses)</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">IMC</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end justify-between">
-              <div className="text-2xl font-bold">24.1</div>
-              <div className="flex items-center text-green-500 text-sm">
-                <ArrowDown className="h-4 w-4 mr-1" />
-                <span>0.8</span>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">Normal (18.5 - 24.9)</p>
-          </CardContent>
-        </Card>
+              <p className="text-xs text-muted-foreground mt-1">{stat.description}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
@@ -95,6 +127,7 @@ export default function ClientProgressPage() {
           <TabsTrigger value="strength">Força</TabsTrigger>
           <TabsTrigger value="photos">Fotos</TabsTrigger>
         </TabsList>
+
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="lg:col-span-4">
@@ -120,6 +153,7 @@ export default function ClientProgressPage() {
               </CardContent>
             </Card>
           </div>
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader className="pb-2">
@@ -128,11 +162,7 @@ export default function ClientProgressPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[
-                    { name: "Perder 5kg", progress: 46, target: "2.7kg restantes", trend: "down" },
-                    { name: "Reduzir % de gordura para 15%", progress: 60, target: "3.2% restantes", trend: "down" },
-                    { name: "Aumentar massa muscular em 3kg", progress: 40, target: "1.8kg restantes", trend: "up" },
-                  ].map((goal, i) => (
+                  {goals.map((goal, i) => (
                     <div key={i} className="space-y-2">
                       <div className="flex items-center justify-between">
                         <p className="text-sm font-medium">{goal.name}</p>
@@ -154,6 +184,7 @@ export default function ClientProgressPage() {
                 </div>
               </CardContent>
             </Card>
+
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle>Últimas Avaliações</CardTitle>
@@ -161,11 +192,7 @@ export default function ClientProgressPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[
-                    { date: "10/05/2023", weight: "72.5 kg", fat: "18.2%", muscle: "32.8 kg" },
-                    { date: "10/04/2023", weight: "73.8 kg", fat: "19.5%", muscle: "32.2 kg" },
-                    { date: "10/03/2023", weight: "74.8 kg", fat: "21.7%", muscle: "31.6 kg" },
-                  ].map((assessment, i) => (
+                  {assessments.map((assessment, i) => (
                     <div key={i} className="flex items-center justify-between">
                       <div className="space-y-1">
                         <p className="text-sm font-medium">{assessment.date}</p>
@@ -192,6 +219,7 @@ export default function ClientProgressPage() {
                 </div>
               </CardContent>
             </Card>
+
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle>Frequência de Treino</CardTitle>
@@ -199,12 +227,7 @@ export default function ClientProgressPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {[
-                    { week: "Esta semana", days: 3, target: 5, status: "Em andamento" },
-                    { week: "Semana passada", days: 4, target: 5, status: "Concluído" },
-                    { week: "Há 2 semanas", days: 5, target: 5, status: "Concluído" },
-                    { week: "Há 3 semanas", days: 3, target: 5, status: "Concluído" },
-                  ].map((week, i) => (
+                  {trainingFrequency.map((week, i) => (
                     <div key={i} className="space-y-1">
                       <div className="flex justify-between text-sm">
                         <span className="font-medium">{week.week}</span>
@@ -221,6 +244,7 @@ export default function ClientProgressPage() {
             </Card>
           </div>
         </TabsContent>
+
         <TabsContent value="measurements" className="space-y-4">
           <Card>
             <CardHeader>
@@ -229,20 +253,7 @@ export default function ClientProgressPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {[
-                  { name: "Braço (direito)", current: "35.2 cm", start: "33.5 cm", change: "+1.7 cm", trend: "up" },
-                  { name: "Peito", current: "98.5 cm", start: "100.2 cm", change: "-1.7 cm", trend: "down" },
-                  { name: "Cintura", current: "82.3 cm", start: "87.5 cm", change: "-5.2 cm", trend: "down" },
-                  { name: "Quadril", current: "95.8 cm", start: "98.2 cm", change: "-2.4 cm", trend: "down" },
-                  { name: "Coxa (direita)", current: "58.5 cm", start: "56.8 cm", change: "+1.7 cm", trend: "up" },
-                  {
-                    name: "Panturrilha (direita)",
-                    current: "38.2 cm",
-                    start: "37.5 cm",
-                    change: "+0.7 cm",
-                    trend: "up",
-                  },
-                ].map((measurement, i) => (
+                {measurements.map((measurement, i) => (
                   <div key={i} className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -273,6 +284,7 @@ export default function ClientProgressPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
         <TabsContent value="strength" className="space-y-4">
           <Card>
             <CardHeader>
@@ -281,34 +293,7 @@ export default function ClientProgressPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {[
-                  { name: "Supino Reto", current: "20kg", start: "15kg", change: "+5kg", trend: "up", percentage: 33 },
-                  { name: "Agachamento", current: "40kg", start: "25kg", change: "+15kg", trend: "up", percentage: 60 },
-                  {
-                    name: "Levantamento Terra",
-                    current: "50kg",
-                    start: "35kg",
-                    change: "+15kg",
-                    trend: "up",
-                    percentage: 43,
-                  },
-                  {
-                    name: "Remada Curvada",
-                    current: "25kg",
-                    start: "18kg",
-                    change: "+7kg",
-                    trend: "up",
-                    percentage: 39,
-                  },
-                  {
-                    name: "Desenvolvimento",
-                    current: "15kg",
-                    start: "12kg",
-                    change: "+3kg",
-                    trend: "up",
-                    percentage: 25,
-                  },
-                ].map((exercise, i) => (
+                {strengthProgress.map((exercise, i) => (
                   <div key={i} className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
@@ -336,6 +321,7 @@ export default function ClientProgressPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
         <TabsContent value="photos" className="space-y-4">
           <Card>
             <CardHeader>
